@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173c35">
+  <meta name="description" content="مكتبة ملفات المحاضرات والمراجعة والمواد الدراسية بصيغة PDF.">
+  <title>مكتبة المقررات</title>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="مكتبة المقررات | ملفاتك الدراسية في مكان واحد">
+  <meta property="og:description" content="تصفّح ملفات المحاضرات والمراجعة وافتحها أو نزّلها بسهولة.">
+  <meta property="og:image" content="./share-card.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="مكتبة المقررات | ملفاتك الدراسية في مكان واحد">
+  <meta name="twitter:description" content="تصفّح ملفات المحاضرات والمراجعة وافتحها أو نزّلها بسهولة.">
+  <meta name="twitter:image" content="./share-card.svg">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #192a28;
+      --muted: #667471;
+      --paper: #f4f6f1;
+      --white: #fff;
+      --line: #e2e8e1;
+      --green: #173c35;
+      --green-light: #e4eee7;
+      --orange: #e5784d;
+      --yellow: #f1c66d;
+      --shadow: 0 16px 40px rgb(26 48 42 / 8%);
+      --page-pattern: radial-gradient(#dce5dc 0.7px, transparent 0.7px);
+      font-family: "IBM Plex Sans Arabic", "DM Sans", Tahoma, sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --ink: #e5ece8;
+      --muted: #aab8b1;
+      --paper: #151e1b;
+      --white: #202b27;
+      --line: #35423d;
+      --green: #315b4e;
+      --green-light: #293d35;
+      --orange: #ef956d;
+      --yellow: #f1c66d;
+      --shadow: 0 16px 40px rgb(0 0 0 / 18%);
+      --page-pattern: radial-gradient(rgb(255 255 255 / 5%) 0.7px, transparent 0.7px);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background-color: var(--paper);
+      background-image: var(--page-pattern);
+      background-size: 17px 17px;
+    }
+
+    button, input { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    .masthead {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      background: var(--green);
+      isolation: isolate;
+    }
+
+    .masthead::before {
+      position: absolute;
+      z-index: -1;
+      inset: 0 48% 0 0;
+      content: "";
+      opacity: .18;
+      background-image: linear-gradient(135deg, transparent 49.5%, #a3c3a9 50%, transparent 50.5%);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(90deg, transparent, #000);
+    }
+
+    .masthead-inner, main, footer {
+      width: min(1080px, calc(100% - 48px));
+      margin-inline: auto;
+    }
+
+    .masthead-inner { padding-block: 32px 38px; }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 37px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      color: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border: 1px solid rgb(255 255 255 / 30%);
+      border-radius: 9px;
+      color: var(--yellow);
+      font-family: "DM Sans", sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .share-button, .tool-button {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 14px;
+      border: 1px solid rgb(255 255 255 / 30%);
+      border-radius: 6px;
+      color: #fff;
+      background: transparent;
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+    }
+
+    .share-button:hover, .tool-button:hover { border-color: #fff; background: rgb(255 255 255 / 9%); }
+    .share-icon { font-size: 18px; line-height: 1; }
+    .tool-icon { font-size: 16px; line-height: 1; }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 24px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: #bdd1c2;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 4vw, 43px);
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    .intro-copy {
+      margin: 10px 0 0;
+      color: #d1ded3;
+      font-size: 15px;
+    }
+
+    .total {
+      display: flex;
+      align-items: baseline;
+      gap: 9px;
+      padding: 11px 15px;
+      border: 1px solid rgb(255 255 255 / 21%);
+      border-radius: 7px;
+      white-space: nowrap;
+    }
+
+    .total strong { color: var(--yellow); font-family: "DM Sans", sans-serif; font-size: 23px; }
+    .total span { color: #d1ded3; font-size: 13px; }
+
+    main { padding-block: 28px 50px; }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 19px;
+    }
+
+    .filters { display: flex; flex-wrap: wrap; gap: 7px; }
+
+    .filter {
+      min-height: 37px;
+      padding: 0 13px;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      color: #586762;
+      background: transparent;
+      cursor: pointer;
+      transition: color .18s, background .18s, border-color .18s;
+    }
+
+    .filter:hover { border-color: #d4ded4; }
+    .filter[aria-pressed="true"] { border-color: var(--green); color: #fff; background: var(--green); }
+    .filter:disabled { border-color: var(--line); color: var(--muted); background: var(--white); cursor: not-allowed; }
+
+    .soon-label {
+      display: inline-block;
+      margin-inline-start: 4px;
+      padding: 1px 5px;
+      border: 1px solid color-mix(in srgb, var(--orange) 35%, transparent);
+      border-radius: 3px;
+      color: var(--orange);
+      font-size: 10px;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    .search-wrap {
+      position: relative;
+      width: min(310px, 100%);
+      flex: 0 1 310px;
+    }
+
+    .search-icon {
+      position: absolute;
+      top: 50%;
+      inset-inline-start: 13px;
+      color: #75827e;
+      font-size: 18px;
+      transform: translateY(-52%);
+      pointer-events: none;
+    }
+
+    .search {
+      width: 100%;
+      height: 42px;
+      padding-inline: 40px 13px;
+      border: 1px solid #dce4db;
+      border-radius: 6px;
+      outline: none;
+      color: var(--ink);
+      background: var(--white);
+      transition: border-color .18s, box-shadow .18s;
+    }
+
+    .search::placeholder { color: var(--muted); }
+    .search:focus { border-color: #508573; box-shadow: 0 0 0 3px rgb(80 133 115 / 15%); }
+
+    .list-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 35px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .list-heading strong { color: var(--ink); font-weight: 600; }
+
+    .file-list {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .file-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 18px;
+      min-height: 86px;
+      padding: 14px 19px;
+      border-bottom: 1px solid var(--line);
+      animation: arrive .35s both;
+    }
+
+    .file-row:last-child { border-bottom: 0; }
+
+    .file-info { display: flex; min-width: 0; align-items: center; gap: 14px; }
+
+    .pdf-mark {
+      display: grid;
+      width: 42px;
+      height: 48px;
+      flex: 0 0 42px;
+      place-items: center;
+      border: 1px solid color-mix(in srgb, var(--orange) 24%, transparent);
+      border-radius: 5px;
+      color: #bd573b;
+      background: color-mix(in srgb, var(--orange) 9%, var(--white));
+      font-family: "DM Sans", sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .file-copy { min-width: 0; }
+
+    .file-name {
+      overflow-wrap: anywhere;
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.55;
+    }
+
+    .file-name-link {
+      display: inline-block;
+      max-width: 100%;
+      padding: 3px 8px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      color: var(--ink);
+      background: var(--white);
+      overflow-wrap: anywhere;
+      text-decoration: none;
+      transition: border-color .18s, background .18s;
+    }
+
+    .file-name-link:hover { border-color: #99b3a4; background: var(--green-light); }
+    .file-name-link:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+
+    .file-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .file-category {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .file-category::before {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      content: "";
+      background: var(--orange);
+    }
+
+    .file-actions { display: flex; align-items: center; gap: 8px; }
+
+    .action {
+      display: inline-flex;
+      min-height: 36px;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 11px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      color: var(--ink);
+      background: var(--white);
+      font-size: 13px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: border-color .18s, color .18s, background .18s;
+    }
+
+    .action:hover { border-color: #99b3a4; color: var(--ink); background: var(--green-light); }
+    .action.primary { border-color: var(--green); color: #fff; background: var(--green); }
+    .action.primary:hover { border-color: #24594d; background: #24594d; }
+    .action-icon { font-size: 16px; line-height: 1; }
+
+    .empty-state {
+      padding: 52px 20px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .empty-state strong { display: block; margin-bottom: 5px; color: var(--ink); font-size: 16px; }
+    .empty-state[hidden] { display: none; }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-block: 0 25px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    #toast {
+      position: fixed;
+      z-index: 5;
+      right: 50%;
+      bottom: 22px;
+      max-width: calc(100% - 32px);
+      padding: 11px 16px;
+      border: 1px solid rgb(255 255 255 / 14%);
+      border-radius: 6px;
+      color: #fff;
+      background: var(--green);
+      box-shadow: 0 8px 24px rgb(20 38 33 / 22%);
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(50%, 8px);
+      transition: opacity .2s, transform .2s;
+    }
+
+    #toast.visible { opacity: 1; transform: translate(50%, 0); }
+
+    @keyframes arrive {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+
+    @media (max-width: 700px) {
+      .masthead-inner, main, footer { width: min(100% - 32px, 560px); }
+      .masthead-inner { padding-block: 20px 27px; }
+      .topline { margin-bottom: 27px; }
+      .intro { grid-template-columns: minmax(0, 1fr); align-items: start; gap: 17px; }
+      .total { width: fit-content; padding: 7px 11px; }
+      main { padding-block: 20px 34px; }
+      .toolbar { align-items: stretch; flex-direction: column-reverse; gap: 13px; }
+      .search-wrap { width: 100%; flex: auto; }
+      .filters { gap: 5px; }
+      .filter { min-height: 34px; padding-inline: 10px; font-size: 13px; }
+      .file-row { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 13px; }
+      .file-info { align-items: flex-start; gap: 11px; }
+      .pdf-mark { width: 37px; height: 43px; flex-basis: 37px; }
+      .file-name { font-size: 14px; }
+      .file-actions { padding-inline-start: 48px; }
+      .action { min-height: 35px; padding-inline: 10px; }
+      footer { flex-direction: column; gap: 3px; }
+    }
+
+    @media (max-width: 380px) {
+      .masthead-inner, main, footer { width: calc(100% - 24px); }
+      .brand { font-size: 14px; }
+      .share-button, .tool-button { padding-inline: 9px; font-size: 12px; }
+      .filter { padding-inline: 8px; font-size: 12px; }
+      .file-actions { padding-inline-start: 0; }
+      .action { flex: 1; }
+    }
+
+    /* Keep native form controls aligned with the selected theme. */
+    :root[data-theme="dark"] .search { border-color: var(--line); }
+    :root[dir="ltr"] .file-actions { justify-content: flex-start; }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="topline">
+        <a class="brand" href="./" aria-label="مكتبة المقررات، الصفحة الرئيسية" data-i18n-aria="homeLabel">
+          <span class="brand-mark" aria-hidden="true">م</span>
+          <span data-i18n="brand">مكتبة المقررات</span>
+        </a>
+        <div class="header-actions">
+          <button class="share-button" id="shareButton" type="button">
+            <span class="share-icon" aria-hidden="true">↗</span>
+            <span data-i18n="share">مشاركة</span>
+          </button>
+          <button class="tool-button" id="themeButton" type="button" aria-label="تفعيل الوضع الليلي">
+            <span class="tool-icon" id="themeIcon" aria-hidden="true">☾</span>
+            <span id="themeLabel">الوضع الليلي</span>
+          </button>
+          <button class="tool-button" id="languageButton" type="button" aria-label="Switch language to English">
+            <span class="tool-icon" aria-hidden="true">文</span>
+            <span id="languageLabel">English</span>
+          </button>
+        </div>
+      </div>
+      <div class="intro">
+        <div>
+          <p class="eyebrow" data-i18n="eyebrow">ملفات المحاضرات والمراجعة</p>
+          <h1 data-i18n="heroTitle">كل مادتك، في مكان واحد.</h1>
+          <p class="intro-copy" data-i18n="heroCopy">تصفّح الملفات وافتحها أو نزّلها بسهولة.</p>
+        </div>
+        <div class="total" aria-label="عدد الملفات" data-i18n-aria="totalAria">
+          <strong id="totalCount">14</strong>
+          <span data-i18n="totalLabel">ملف PDF</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="toolbar" aria-label="البحث والتصنيف">
+      <div class="filters" role="group" aria-label="تصفية حسب المادة" data-i18n-aria="filterGroup">
+        <button class="filter" type="button" data-filter="all" data-i18n="filterAll" aria-pressed="true">الكل</button>
+        <button class="filter" type="button" data-filter="finance" data-i18n="filterFinance" aria-pressed="false">إدارة مالية</button>
+        <button class="filter" type="button" data-filter="establishments" data-i18n="filterEstablishments" aria-pressed="false">منشآت</button>
+        <button class="filter" type="button" data-filter="review" data-i18n="filterReview" aria-pressed="false">مراجعة</button>
+        <button class="filter" type="button" data-filter="centers" data-i18n="filterCenters" aria-pressed="false">سناتر</button>
+        <button class="filter" type="button" disabled aria-label="ضرائب، قريبًا" data-i18n-aria="taxesSoon"><span data-i18n="filterTaxes">ضرائب</span><span class="soon-label" data-i18n="comingSoon">قريبًا</span></button>
+        <button class="filter" type="button" disabled aria-label="تكاليف، قريبًا" data-i18n-aria="costsSoon"><span data-i18n="filterCosts">تكاليف</span><span class="soon-label" data-i18n="comingSoon">قريبًا</span></button>
+      </div>
+      <label class="search-wrap">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input class="search" id="searchInput" type="search" placeholder="ابحث باسم الملف..." autocomplete="off" aria-label="ابحث باسم الملف" data-i18n-placeholder="searchPlaceholder" data-i18n-aria="searchLabel">
+      </label>
+    </section>
+
+    <div class="list-heading">
+      <strong data-i18n="listTitle">الملفات</strong>
+      <span id="resultCount" aria-live="polite">14 ملف</span>
+    </div>
+    <section class="file-list" id="fileList" aria-label="قائمة الملفات" data-i18n-aria="fileListLabel"></section>
+    <div class="empty-state" id="emptyState" hidden>
+      <strong id="emptyTitle" data-i18n="emptyTitle">مفيش ملفات مطابقة</strong>
+      <span id="emptyCopy" data-i18n="emptyCopy">جرّب كلمة بحث مختلفة أو اختار تصنيف تاني.</span>
+    </div>
+  </main>
+
+  <footer>
+    <span data-i18n="brand">مكتبة المقررات</span>
+    <span><span id="footerLabel">ملفات PDF</span> · <span id="footerCount">14</span> <span id="footerUnit">ملف</span></span>
+  </footer>
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const files = [
+      { name: "Ch01 Financial Management 2026.pdf", size: 2097322, category: "finance", labels: { ar: "إدارة مالية", en: "Financial Management" } },
+      { name: "Ch02 Financial Management 2026 (1).pdf", size: 1156196, category: "finance", labels: { ar: "إدارة مالية", en: "Financial Management" } },
+      { name: "Ch02 Financial Management 2026.pdf", size: 940724, category: "finance", labels: { ar: "إدارة مالية", en: "Financial Management" } },
+      { name: "الشوبكي- مالية -1.pdf", size: 4506123, category: "finance", labels: { ar: "إدارة مالية", en: "Financial Management" } },
+      { name: "الفصل  الأول من 27 الي الأخر.pdf", size: 610400, category: "review", labels: { ar: "فصل دراسي", en: "Course chapter" } },
+      { name: "الفصل الأول مراجعة.pdf", size: 612022, category: "review", labels: { ar: "مراجعة", en: "Revision" } },
+      { name: "المحاضرة الأولي منشات.pdf", size: 490162, category: "establishments", labels: { ar: "منشآت", en: "Business establishments" } },
+      { name: "المحاضرة الثالثة منشأت.pdf", size: 497577, category: "establishments", labels: { ar: "منشآت", en: "Business establishments" } },
+      { name: "المحاضرة الثانية منشأت.pdf", size: 559654, category: "establishments", labels: { ar: "منشآت", en: "Business establishments" } },
+      { name: "المحاضرة الرابعة منشات.pdf", size: 571801, category: "establishments", labels: { ar: "منشآت", en: "Business establishments" } },
+      { name: "محاسبة ضريبية - الفرقة الرابعة - مذكرة رقم 1.pdf", size: 1981468, category: "review", labels: { ar: "محاسبة ضريبية", en: "Tax accounting" } },
+      { name: "مذكرة 1 - بنوك - انتظام.pdf", size: 845258, category: "review", labels: { ar: "بنوك", en: "Banking" } },
+      { name: "مذكرة 1 - مراجعة رابعة.pdf", size: 809103, category: "review", labels: { ar: "مراجعة", en: "Revision" } },
+      { name: "نظم التكاليف - الفرقة الرابعة - مذكرة رقم 1.pdf", size: 1809382, category: "review", labels: { ar: "نظم التكاليف", en: "Cost systems" } }
+    ];
+
+    const translations = {
+      ar: {
+        siteTitle: "مكتبة المقررات",
+        description: "مكتبة ملفات المحاضرات والمراجعة والمواد الدراسية بصيغة PDF.",
+        homeLabel: "مكتبة المقررات، الصفحة الرئيسية",
+        totalAria: "عدد الملفات",
+        brand: "مكتبة المقررات",
+        share: "مشاركة",
+        eyebrow: "ملفات المحاضرات والمراجعة",
+        heroTitle: "كل مادتك، في مكان واحد.",
+        heroCopy: "تصفّح الملفات وافتحها أو نزّلها بسهولة.",
+        totalLabel: "ملف PDF",
+        filterGroup: "تصفية حسب المادة",
+        filterAll: "الكل",
+        filterFinance: "إدارة مالية",
+        filterEstablishments: "منشآت",
+        filterReview: "مراجعة",
+        filterCenters: "سناتر",
+        filterTaxes: "ضرائب",
+        filterCosts: "تكاليف",
+        comingSoon: "قريبًا",
+        taxesSoon: "ضرائب، قريبًا",
+        costsSoon: "تكاليف، قريبًا",
+        searchPlaceholder: "ابحث باسم الملف...",
+        searchLabel: "ابحث باسم الملف",
+        listTitle: "الملفات",
+        fileListLabel: "قائمة الملفات",
+        emptyTitle: "مفيش ملفات مطابقة",
+        emptyCopy: "جرّب كلمة بحث مختلفة أو اختار تصنيف تاني.",
+        noCenters: "لا توجد ملفات مذاكرة أو مذكرات حاليًا.",
+        footerFiles: "ملفات PDF",
+        footerUnit: "ملف",
+        openFile: "افتح الملف",
+        viewFile: "عرض الملف",
+        download: "تنزيل",
+        themeNight: "الوضع الليلي",
+        themeDay: "الوضع النهاري",
+        localShare: "ارفع المكتبة على الإنترنت لمشاركة رابطها",
+        copied: "تم نسخ رابط المكتبة",
+        manualCopy: "انسخ رابط الصفحة من شريط العنوان",
+        shareText: "ملفات المحاضرات والمراجعة في مكان واحد"
+      },
+      en: {
+        siteTitle: "Course Library",
+        description: "A library of lecture notes, revision materials, and course PDFs.",
+        homeLabel: "Course Library home",
+        totalAria: "Number of files",
+        brand: "Course Library",
+        share: "Share",
+        eyebrow: "Lectures and revision materials",
+        heroTitle: "All your course files, in one place.",
+        heroCopy: "Browse, open, or download your files.",
+        totalLabel: "PDF files",
+        filterGroup: "Filter by subject",
+        filterAll: "All files",
+        filterFinance: "Financial management",
+        filterEstablishments: "Establishments",
+        filterReview: "Revision",
+        filterCenters: "Study centers",
+        filterTaxes: "Tax",
+        filterCosts: "Cost accounting",
+        comingSoon: "Coming soon",
+        taxesSoon: "Tax, coming soon",
+        costsSoon: "Cost accounting, coming soon",
+        searchPlaceholder: "Search file names...",
+        searchLabel: "Search file names",
+        listTitle: "Files",
+        fileListLabel: "File list",
+        emptyTitle: "No matching files",
+        emptyCopy: "Try a different search or select another category.",
+        noCenters: "No study or memo files found yet.",
+        footerFiles: "PDF files",
+        footerUnit: "files",
+        openFile: "Open file",
+        viewFile: "View file",
+        download: "Download",
+        themeNight: "Dark mode",
+        themeDay: "Light mode",
+        localShare: "Upload the library online before sharing its link",
+        copied: "Library link copied",
+        manualCopy: "Copy the page link from the address bar",
+        shareText: "Lectures and revision materials in one place"
+      }
+    };
+
+    const list = document.getElementById("fileList");
+    const searchInput = document.getElementById("searchInput");
+    const resultCount = document.getElementById("resultCount");
+    const emptyState = document.getElementById("emptyState");
+    const filters = [...document.querySelectorAll(".filter")];
+    const root = document.documentElement;
+    let activeFilter = "all";
+    let language = "ar";
+    let theme = "light";
+    let toastTimeout;
+
+    function readPreference(key, fallback) {
+      try {
+        return localStorage.getItem(key) || fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function savePreference(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch {
+        return;
+      }
+    }
+
+    language = readPreference("library-language", "ar");
+    if (!translations[language]) language = "ar";
+    theme = readPreference("library-theme", "light");
+    if (theme !== "dark" && theme !== "light") theme = "light";
+
+    function currentText() {
+      return translations[language];
+    }
+
+    function fileCategory(file) {
+      const isStudyCenterFile = file.name.includes("مذاكرة")
+        || file.name.includes("مذكرة")
+        || file.name === "الشوبكي- مالية -1.pdf";
+      return isStudyCenterFile ? "centers" : file.category;
+    }
+
+    function formatSize(bytes) {
+      const locale = language === "ar" ? "ar-EG" : "en";
+      const size = (bytes / 1048576).toLocaleString(locale, { maximumFractionDigits: 1 });
+      return language === "ar" ? `${size} م.ب` : `${size} MB`;
+    }
+
+    function applyLanguage() {
+      const text = currentText();
+      root.lang = language;
+      root.dir = language === "ar" ? "rtl" : "ltr";
+      document.title = text.siteTitle;
+      document.querySelector('meta[name="description"]').content = text.description;
+      document.querySelector('meta[property="og:title"]').content = `${text.siteTitle} | ${text.heroTitle}`;
+      document.querySelector('meta[property="og:description"]').content = text.description;
+      document.querySelector('meta[name="twitter:title"]').content = `${text.siteTitle} | ${text.heroTitle}`;
+      document.querySelector('meta[name="twitter:description"]').content = text.description;
+
+      for (const element of document.querySelectorAll("[data-i18n]")) {
+        element.textContent = text[element.dataset.i18n];
+      }
+      for (const element of document.querySelectorAll("[data-i18n-placeholder]")) {
+        element.placeholder = text[element.dataset.i18nPlaceholder];
+      }
+      for (const element of document.querySelectorAll("[data-i18n-aria]")) {
+        element.setAttribute("aria-label", text[element.dataset.i18nAria]);
+      }
+
+      document.querySelector(".brand-mark").textContent = language === "ar" ? "م" : "C";
+      document.getElementById("languageLabel").textContent = language === "ar" ? "English" : "العربية";
+      document.getElementById("languageButton").setAttribute("aria-label", language === "ar" ? "Switch language to English" : "تغيير اللغة إلى العربية");
+      document.getElementById("footerLabel").textContent = text.footerFiles;
+      document.getElementById("footerUnit").textContent = language === "ar" ? "ملف" : (files.length === 1 ? "file" : "files");
+      document.getElementById("totalCount").textContent = files.length.toLocaleString(language === "ar" ? "ar-EG" : "en");
+      document.getElementById("footerCount").textContent = files.length.toLocaleString(language === "ar" ? "ar-EG" : "en");
+      renderFiles();
+    }
+
+    function applyTheme() {
+      root.dataset.theme = theme;
+      root.style.colorScheme = theme;
+      document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#151e1b" : "#173c35";
+      const nextTheme = theme === "dark" ? "light" : "dark";
+      document.getElementById("themeIcon").textContent = theme === "dark" ? "☼" : "☾";
+      document.getElementById("themeLabel").textContent = currentText()[theme === "dark" ? "themeDay" : "themeNight"];
+      document.getElementById("themeButton").setAttribute("aria-label", currentText()[theme === "dark" ? "themeDay" : "themeNight"]);
+      document.getElementById("themeButton").dataset.nextTheme = nextTheme;
+    }
+
+    function renderFiles() {
+      const text = currentText();
+      const query = searchInput.value.trim().toLocaleLowerCase(language);
+      const visibleFiles = files.filter(file => {
+        const categoryKey = fileCategory(file);
+        const matchesFilter = activeFilter === "all" || categoryKey === activeFilter;
+        const searchableText = `${file.name} ${file.labels.ar} ${file.labels.en}`.toLocaleLowerCase(language);
+        return matchesFilter && searchableText.includes(query);
+      });
+
+      list.replaceChildren();
+      for (const [index, file] of visibleFiles.entries()) {
+        const categoryKey = fileCategory(file);
+        const row = document.createElement("article");
+        row.className = "file-row";
+        row.style.animationDelay = `${Math.min(index, 8) * 22}ms`;
+
+        const info = document.createElement("div");
+        info.className = "file-info";
+        const mark = document.createElement("span");
+        mark.className = "pdf-mark";
+        mark.setAttribute("aria-hidden", "true");
+        mark.textContent = "PDF";
+
+        const copy = document.createElement("div");
+        copy.className = "file-copy";
+        const title = document.createElement("h2");
+        title.className = "file-name";
+        const open = document.createElement("a");
+        const url = `./${encodeURIComponent(file.name)}`;
+        open.className = "file-name-link";
+        open.href = url;
+        open.target = "_blank";
+        open.rel = "noopener";
+        open.setAttribute("aria-label", `${text.openFile}: ${file.name}`);
+        open.textContent = file.name;
+        title.append(open);
+
+        const meta = document.createElement("div");
+        meta.className = "file-meta";
+        const category = document.createElement("span");
+        category.className = "file-category";
+        category.textContent = categoryKey === "centers" ? text.filterCenters : file.labels[language];
+        const size = document.createElement("span");
+        size.textContent = formatSize(file.size);
+        meta.append(category, size);
+        copy.append(title, meta);
+        info.append(mark, copy);
+
+        const actions = document.createElement("div");
+        actions.className = "file-actions";
+        const view = document.createElement("a");
+        view.className = "action primary";
+        view.href = url;
+        view.target = "_blank";
+        view.rel = "noopener";
+        view.setAttribute("aria-label", `${text.viewFile}: ${file.name}`);
+        view.innerHTML = `<span class="action-icon" aria-hidden="true">↗</span><span>${text.viewFile}</span>`;
+        const download = document.createElement("a");
+        download.className = "action";
+        download.href = url;
+        download.download = file.name;
+        download.setAttribute("aria-label", `${text.download}: ${file.name}`);
+        download.innerHTML = `<span class="action-icon" aria-hidden="true">↓</span><span>${text.download}</span>`;
+        actions.append(view, download);
+        row.append(info, actions);
+        list.append(row);
+      }
+
+      const locale = language === "ar" ? "ar-EG" : "en";
+      resultCount.textContent = language === "ar"
+        ? `${visibleFiles.length.toLocaleString(locale)} ملف`
+        : `${visibleFiles.length.toLocaleString(locale)} ${visibleFiles.length === 1 ? "file" : "files"}`;
+      document.getElementById("footerUnit").textContent = language === "ar" ? "ملف" : (files.length === 1 ? "file" : "files");
+      document.getElementById("emptyCopy").textContent = activeFilter === "centers" ? text.noCenters : text.emptyCopy;
+      emptyState.hidden = visibleFiles.length !== 0;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => toast.classList.remove("visible"), 2400);
+    }
+
+    searchInput.addEventListener("input", renderFiles);
+    for (const filter of filters) {
+      filter.addEventListener("click", () => {
+        activeFilter = filter.dataset.filter;
+        for (const button of filters) button.setAttribute("aria-pressed", String(button === filter));
+        renderFiles();
+      });
+    }
+
+    document.getElementById("languageButton").addEventListener("click", () => {
+      language = language === "ar" ? "en" : "ar";
+      savePreference("library-language", language);
+      applyLanguage();
+      applyTheme();
+    });
+
+    document.getElementById("themeButton").addEventListener("click", event => {
+      theme = event.currentTarget.dataset.nextTheme;
+      savePreference("library-theme", theme);
+      applyTheme();
+    });
+
+    document.getElementById("shareButton").addEventListener("click", async () => {
+      if (window.location.protocol === "file:") {
+        showToast(currentText().localShare);
+        return;
+      }
+
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: document.title, text: currentText().shareText, url: window.location.href });
+          return;
+        }
+        await navigator.clipboard.writeText(window.location.href);
+        showToast(currentText().copied);
+      } catch (error) {
+        if (error.name !== "AbortError") showToast(currentText().manualCopy);
+      }
+    });
+
+    applyLanguage();
+    applyTheme();
+  </script>
+</body>
+</html>
