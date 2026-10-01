@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173c35">
+  <title>إدارة المكتبة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+  <main class="admin-shell">
+    <section id="loginPanel" class="login-panel" aria-labelledby="loginTitle">
+      <a class="brand" href="/" aria-label="العودة إلى المكتبة"><span class="brand-mark">م</span> مكتبة المقررات</a>
+      <h1 id="loginTitle">تسجيل دخول الإدارة</h1>
+      <p class="muted">استخدم حساب الإدارة المسجل في Supabase.</p>
+      <form id="loginForm" class="stack-form">
+        <label>البريد الإلكتروني<input id="loginEmail" type="email" autocomplete="username" required></label>
+        <label>كلمة المرور<input id="loginPassword" type="password" autocomplete="current-password" required></label>
+        <button class="button primary" type="submit">تسجيل الدخول</button>
+      </form>
+      <p class="form-message" id="loginMessage" role="status"></p>
+    </section>
+
+    <section id="dashboard" hidden>
+      <header class="admin-header">
+        <div>
+          <a class="brand" href="/"><span class="brand-mark">م</span> مكتبة المقررات</a>
+          <p class="muted">إدارة المحتوى والملفات</p>
+        </div>
+        <div class="header-actions"><a class="button" href="/">عرض الموقع</a><button class="button" id="signOutButton" type="button">تسجيل الخروج</button></div>
+      </header>
+
+      <nav class="admin-nav" aria-label="أقسام الإدارة">
+        <button class="nav-button active" data-view="overview" type="button">نظرة عامة</button>
+        <button class="nav-button" data-view="editor" type="button">إضافة محتوى</button>
+        <button class="nav-button" data-view="manage" type="button">إدارة المحتوى</button>
+      </nav>
+
+      <section id="overviewView" class="view">
+        <div class="view-heading"><div><p class="eyebrow">لوحة التحكم</p><h1>نظرة عامة</h1></div><button class="button" id="refreshButton" type="button">تحديث البيانات</button></div>
+        <div class="metrics">
+          <article class="metric"><span>إجمالي الملفات</span><strong id="fileMetric">0</strong></article>
+          <article class="metric"><span>إجمالي الكورسات</span><strong id="courseMetric">0</strong></article>
+          <article class="metric"><span>محتوى منشور</span><strong id="publishedMetric">0</strong></article>
+          <article class="metric"><span>محتوى مخفي</span><strong id="hiddenMetric">0</strong></article>
+        </div>
+        <section class="panel">
+          <div class="panel-heading"><h2>أحدث المحتوى</h2><button class="text-button" data-go="manage" type="button">إدارة المحتوى</button></div>
+          <div class="table-wrap"><table><thead><tr><th>العنوان</th><th>النوع</th><th>التصنيف</th><th>تاريخ الإضافة</th><th>الحالة</th></tr></thead><tbody id="recentRows"></tbody></table></div>
+          <p class="empty-message" id="recentEmpty" hidden>لا يوجد محتوى بعد.</p>
+        </section>
+      </section>
+
+      <section id="editorView" class="view" hidden>
+        <div class="view-heading"><div><p class="eyebrow">المكتبة والكورسات</p><h1 id="editorTitle">إضافة محتوى</h1></div><button class="button" id="cancelEditButton" type="button" hidden>إلغاء التعديل</button></div>
+        <form id="itemForm" class="panel editor-form">
+          <input id="itemId" type="hidden">
+          <div class="form-grid">
+            <label>نوع المحتوى<select id="contentType"><option value="file">ملف PDF</option><option value="course">كورس</option></select></label>
+            <label>التصنيف بالعربية<input id="categoryAr" required maxlength="80"></label>
+            <label>التصنيف بالإنجليزية<input id="categoryEn" required maxlength="80"></label>
+            <label>اسم المحتوى بالعربية<input id="titleAr" required maxlength="180"></label>
+            <label>اسم المحتوى بالإنجليزية<input id="titleEn" required maxlength="180"></label>
+            <label class="wide">الوصف بالعربية<textarea id="descriptionAr" rows="4"></textarea></label>
+            <label class="wide">الوصف بالإنجليزية<textarea id="descriptionEn" rows="4"></textarea></label>
+            <label id="pdfField">ملف PDF<input id="pdfFile" type="file" accept="application/pdf,.pdf"><span class="field-hint" id="pdfHint">PDF حتى 50 ميجابايت. مطلوب للملف ويمكن إضافته للكورس.</span></label>
+            <label>صورة الغلاف<input id="thumbnailFile" type="file" accept="image/jpeg,image/png,image/webp"><span class="field-hint">JPG أو PNG أو WebP، حتى 5 ميجابايت.</span></label>
+          </div>
+          <div class="form-options"><label class="check-label"><input id="isPublished" type="checkbox" checked> نشر المحتوى</label><label class="check-label"><input id="allowDownload" type="checkbox" checked> السماح بالتنزيل</label></div>
+          <div class="form-actions"><button class="button primary" id="saveButton" type="submit">إضافة المحتوى</button><span class="form-message" id="formMessage" role="status"></span></div>
+        </form>
+      </section>
+
+      <section id="manageView" class="view" hidden>
+        <div class="view-heading"><div><p class="eyebrow">تحرير ونشر</p><h1>إدارة المحتوى</h1></div><button class="button primary" data-go="editor" type="button">إضافة محتوى</button></div>
+        <div class="manage-tools"><label class="search-label">بحث<input id="manageSearch" type="search" placeholder="ابحث بالعنوان أو التصنيف"></label><label>التصنيف<select id="categoryFilter"><option value="">كل التصنيفات</option></select></label><label>النوع<select id="typeFilter"><option value="">الكل</option><option value="file">ملفات PDF</option><option value="course">كورسات</option></select></label></div>
+        <section class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>الغلاف</th><th>اسم المحتوى</th><th>التصنيف</th><th>تاريخ الإضافة</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody id="manageRows"></tbody></table></div><p class="empty-message" id="manageEmpty" hidden>لا توجد نتائج مطابقة.</p></section>
+      </section>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./admin.js"></script>
+</body>
+</html>

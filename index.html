@@ -395,6 +395,28 @@
     .empty-state strong { display: block; margin-bottom: 5px; color: var(--ink); font-size: 16px; }
     .empty-state[hidden] { display: none; }
 
+    .course-section { margin-top: 34px; }
+    .course-section[hidden] { display: none; }
+    .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr)); gap: 14px; }
+    .course-card { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--white); box-shadow: var(--shadow); }
+    .course-card img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--green-light); }
+    .course-copy { padding: 15px; }
+    .course-copy h3 { margin: 0; font-size: 16px; }
+    .course-copy p { margin: 7px 0 0; color: var(--muted); font-size: 13px; }
+  .course-card .action { display: inline-flex; margin-top: 12px; }
+
+    dialog { width: min(560px, calc(100% - 28px)); max-height: min(85vh, 760px); padding: 0; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: var(--white); box-shadow: 0 24px 80px rgb(0 0 0 / 30%); }
+    dialog::backdrop { background: rgb(10 20 16 / 64%); }
+    .detail-content { padding: 20px; }
+    .detail-cover { display: block; width: 100%; max-height: 270px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 5px; background: var(--green-light); }
+    .detail-title { margin: 17px 0 5px; font-size: 21px; }
+    .detail-description { color: var(--muted); white-space: pre-wrap; }
+    .detail-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .detail-close { float: inline-end; min-height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: var(--white); cursor: pointer; }
+    .file-thumbnail { width: 42px; height: 48px; flex: 0 0 42px; border: 1px solid var(--line); border-radius: 5px; object-fit: cover; background: var(--green-light); }
+    #loadState { padding: 44px 20px; color: var(--muted); text-align: center; }
+    #loadState[hidden] { display: none; }
+
     footer {
       display: flex;
       justify-content: space-between;
@@ -498,7 +520,7 @@
           <p class="intro-copy" data-i18n="heroCopy">تصفّح الملفات وافتحها أو نزّلها بسهولة.</p>
         </div>
         <div class="total" aria-label="عدد الملفات" data-i18n-aria="totalAria">
-          <strong id="totalCount">14</strong>
+          <strong id="totalCount">0</strong>
           <span data-i18n="totalLabel">ملف PDF</span>
         </div>
       </div>
@@ -509,12 +531,6 @@
     <section class="toolbar" aria-label="البحث والتصنيف">
       <div class="filters" role="group" aria-label="تصفية حسب المادة" data-i18n-aria="filterGroup">
         <button class="filter" type="button" data-filter="all" data-i18n="filterAll" aria-pressed="true">الكل</button>
-        <button class="filter" type="button" data-filter="finance" data-i18n="filterFinance" aria-pressed="false">إدارة مالية</button>
-        <button class="filter" type="button" data-filter="establishments" data-i18n="filterEstablishments" aria-pressed="false">منشآت</button>
-        <button class="filter" type="button" data-filter="review" data-i18n="filterReview" aria-pressed="false">مراجعة</button>
-        <button class="filter" type="button" data-filter="centers" data-i18n="filterCenters" aria-pressed="false">سناتر</button>
-        <button class="filter" type="button" disabled aria-label="ضرائب، قريبًا" data-i18n-aria="taxesSoon"><span data-i18n="filterTaxes">ضرائب</span><span class="soon-label" data-i18n="comingSoon">قريبًا</span></button>
-        <button class="filter" type="button" disabled aria-label="تكاليف، قريبًا" data-i18n-aria="costsSoon"><span data-i18n="filterCosts">تكاليف</span><span class="soon-label" data-i18n="comingSoon">قريبًا</span></button>
       </div>
       <label class="search-wrap">
         <span class="search-icon" aria-hidden="true">⌕</span>
@@ -524,38 +540,31 @@
 
     <div class="list-heading">
       <strong data-i18n="listTitle">الملفات</strong>
-      <span id="resultCount" aria-live="polite">14 ملف</span>
+      <span id="resultCount" aria-live="polite">0 ملف</span>
     </div>
     <section class="file-list" id="fileList" aria-label="قائمة الملفات" data-i18n-aria="fileListLabel"></section>
+    <div id="loadState" role="status" data-i18n="loading">جاري تحميل الملفات...</div>
     <div class="empty-state" id="emptyState" hidden>
       <strong id="emptyTitle" data-i18n="emptyTitle">مفيش ملفات مطابقة</strong>
       <span id="emptyCopy" data-i18n="emptyCopy">جرّب كلمة بحث مختلفة أو اختار تصنيف تاني.</span>
     </div>
+    <section class="course-section" id="courseSection" hidden>
+      <div class="list-heading"><strong data-i18n="coursesTitle">الكورسات</strong><span id="courseCount"></span></div>
+      <div class="course-grid" id="courseList"></div>
+    </section>
   </main>
 
   <footer>
     <span data-i18n="brand">مكتبة المقررات</span>
-    <span><span id="footerLabel">ملفات PDF</span> · <span id="footerCount">14</span> <span id="footerUnit">ملف</span></span>
+    <span><span id="footerLabel">ملفات PDF</span> · <span id="footerCount">0</span> <span id="footerUnit">ملف</span></span>
   </footer>
   <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="detailDialog" aria-labelledby="detailTitle"><div class="detail-content" id="detailContent"></div></dialog>
 
-  <script>
-    const files = [
-      { name: "Ch01 Financial Management 2026.pdf", size: 2097322, category: "finance", labels: { ar: "إدارة مالية", en: "Financial Management" } },
-      { name: "Ch02 Financial Management 2026 (1).pdf", size: 1156196, category: "finance", labels: { ar: "إدارة مالية", en: "Financial Management" } },
-      { name: "Ch02 Financial Management 2026.pdf", size: 940724, category: "finance", labels: { ar: "إدارة مالية", en: "Financial Management" } },
-      { name: "الشوبكي- مالية -1.pdf", size: 4506123, category: "finance", labels: { ar: "إدارة مالية", en: "Financial Management" } },
-      { name: "الفصل  الأول من 27 الي الأخر.pdf", size: 610400, category: "review", labels: { ar: "فصل دراسي", en: "Course chapter" } },
-      { name: "الفصل الأول مراجعة.pdf", size: 612022, category: "review", labels: { ar: "مراجعة", en: "Revision" } },
-      { name: "المحاضرة الأولي منشات.pdf", size: 490162, category: "establishments", labels: { ar: "منشآت", en: "Business establishments" } },
-      { name: "المحاضرة الثالثة منشأت.pdf", size: 497577, category: "establishments", labels: { ar: "منشآت", en: "Business establishments" } },
-      { name: "المحاضرة الثانية منشأت.pdf", size: 559654, category: "establishments", labels: { ar: "منشآت", en: "Business establishments" } },
-      { name: "المحاضرة الرابعة منشات.pdf", size: 571801, category: "establishments", labels: { ar: "منشآت", en: "Business establishments" } },
-      { name: "محاسبة ضريبية - الفرقة الرابعة - مذكرة رقم 1.pdf", size: 1981468, category: "review", labels: { ar: "محاسبة ضريبية", en: "Tax accounting" } },
-      { name: "مذكرة 1 - بنوك - انتظام.pdf", size: 845258, category: "review", labels: { ar: "بنوك", en: "Banking" } },
-      { name: "مذكرة 1 - مراجعة رابعة.pdf", size: 809103, category: "review", labels: { ar: "مراجعة", en: "Revision" } },
-      { name: "نظم التكاليف - الفرقة الرابعة - مذكرة رقم 1.pdf", size: 1809382, category: "review", labels: { ar: "نظم التكاليف", en: "Cost systems" } }
-    ];
+  <script type="module">
+    import { supabase, configurationError } from "./src/supabase.js";
+
+    let files = [];
 
     const translations = {
       ar: {
@@ -585,6 +594,8 @@
         listTitle: "الملفات",
         fileListLabel: "قائمة الملفات",
         emptyTitle: "مفيش ملفات مطابقة",
+          emptyLibrary: "لا توجد ملفات حاليًا.",
+          emptyLibraryCopy: "سيظهر المحتوى المنشور هنا عند إضافته.",
         emptyCopy: "جرّب كلمة بحث مختلفة أو اختار تصنيف تاني.",
         noCenters: "لا توجد ملفات مذاكرة أو مذكرات حاليًا.",
         footerFiles: "ملفات PDF",
@@ -597,7 +608,14 @@
         localShare: "ارفع المكتبة على الإنترنت لمشاركة رابطها",
         copied: "تم نسخ رابط المكتبة",
         manualCopy: "انسخ رابط الصفحة من شريط العنوان",
-        shareText: "ملفات المحاضرات والمراجعة في مكان واحد"
+        shareText: "ملفات المحاضرات والمراجعة في مكان واحد",
+        loading: "جاري تحميل الملفات...",
+        loadError: "حدث خطأ أثناء تحميل الملفات.",
+        retry: "إعادة المحاولة",
+        coursesTitle: "الكورسات",
+        addedOn: "تاريخ الإضافة",
+        close: "إغلاق",
+        details: "التفاصيل"
       },
       en: {
         siteTitle: "Course Library",
@@ -626,6 +644,8 @@
         listTitle: "Files",
         fileListLabel: "File list",
         emptyTitle: "No matching files",
+          emptyLibrary: "No files yet.",
+          emptyLibraryCopy: "Published content will appear here when added.",
         emptyCopy: "Try a different search or select another category.",
         noCenters: "No study or memo files found yet.",
         footerFiles: "PDF files",
@@ -638,7 +658,14 @@
         localShare: "Upload the library online before sharing its link",
         copied: "Library link copied",
         manualCopy: "Copy the page link from the address bar",
-        shareText: "Lectures and revision materials in one place"
+        shareText: "Lectures and revision materials in one place",
+        loading: "Loading library...",
+        loadError: "There was a problem loading the library.",
+        retry: "Retry",
+        coursesTitle: "Courses",
+        addedOn: "Added",
+        close: "Close",
+        details: "Details"
       }
     };
 
@@ -679,10 +706,7 @@
     }
 
     function fileCategory(file) {
-      const isStudyCenterFile = file.name.includes("مذاكرة")
-        || file.name.includes("مذكرة")
-        || file.name === "الشوبكي- مالية -1.pdf";
-      return isStudyCenterFile ? "centers" : file.category;
+      return file.category || "uncategorized";
     }
 
     function formatSize(bytes) {
@@ -717,9 +741,15 @@
       document.getElementById("languageButton").setAttribute("aria-label", language === "ar" ? "Switch language to English" : "تغيير اللغة إلى العربية");
       document.getElementById("footerLabel").textContent = text.footerFiles;
       document.getElementById("footerUnit").textContent = language === "ar" ? "ملف" : (files.length === 1 ? "file" : "files");
-      document.getElementById("totalCount").textContent = files.length.toLocaleString(language === "ar" ? "ar-EG" : "en");
-      document.getElementById("footerCount").textContent = files.length.toLocaleString(language === "ar" ? "ar-EG" : "en");
+      const fileCount = files.filter(item => item.content_type === "file").length;
+      document.getElementById("footerUnit").textContent = language === "ar" ? "ملف" : (fileCount === 1 ? "file" : "files");
+      document.getElementById("totalCount").textContent = fileCount.toLocaleString(language === "ar" ? "ar-EG" : "en");
+      document.getElementById("footerCount").textContent = fileCount.toLocaleString(language === "ar" ? "ar-EG" : "en");
+        mark.className = file.thumbnail_url ? "file-thumbnail" : "pdf-mark";
+        emptyState.hidden = visibleFiles.length !== 0 || !document.getElementById("loadState").hidden;
+      renderFilters();
       renderFiles();
+      renderCourses();
     }
 
     function applyTheme() {
@@ -736,10 +766,11 @@
     function renderFiles() {
       const text = currentText();
       const query = searchInput.value.trim().toLocaleLowerCase(language);
-      const visibleFiles = files.filter(file => {
+      const publishedFiles = files.filter(file => file.content_type === "file");
+      const visibleFiles = publishedFiles.filter(file => {
         const categoryKey = fileCategory(file);
         const matchesFilter = activeFilter === "all" || categoryKey === activeFilter;
-        const searchableText = `${file.name} ${file.labels.ar} ${file.labels.en}`.toLocaleLowerCase(language);
+        const searchableText = `${file.title_ar} ${file.title_en} ${file.description_ar || ""} ${file.description_en || ""} ${file.category_ar || ""} ${file.category_en || ""}`.toLocaleLowerCase(language);
         return matchesFilter && searchableText.includes(query);
       });
 
@@ -752,33 +783,39 @@
 
         const info = document.createElement("div");
         info.className = "file-info";
-        const mark = document.createElement("span");
-        mark.className = "pdf-mark";
+        const mark = file.thumbnail_url ? document.createElement("img") : document.createElement("span");
+        mark.className = file.thumbnail_url ? "detail-cover" : "pdf-mark";
+        if (file.thumbnail_url) mark.src = file.thumbnail_url;
         mark.setAttribute("aria-hidden", "true");
-        mark.textContent = "PDF";
+        if (!file.thumbnail_url) mark.textContent = "PDF";
 
         const copy = document.createElement("div");
         copy.className = "file-copy";
         const title = document.createElement("h2");
         title.className = "file-name";
         const open = document.createElement("a");
-        const url = `./${encodeURIComponent(file.name)}`;
+        const fileTitle = language === "ar" ? file.title_ar : file.title_en;
+        const url = file.pdf_url;
         open.className = "file-name-link";
         open.href = url;
         open.target = "_blank";
         open.rel = "noopener";
-        open.setAttribute("aria-label", `${text.openFile}: ${file.name}`);
-        open.textContent = file.name;
+        open.setAttribute("aria-label", `${text.openFile}: ${fileTitle}`);
+        open.textContent = fileTitle;
+        open.addEventListener("click", event => { event.preventDefault(); showDetails(file); });
         title.append(open);
 
         const meta = document.createElement("div");
         meta.className = "file-meta";
         const category = document.createElement("span");
         category.className = "file-category";
-        category.textContent = categoryKey === "centers" ? text.filterCenters : file.labels[language];
-        const size = document.createElement("span");
-        size.textContent = formatSize(file.size);
-        meta.append(category, size);
+        category.textContent = language === "ar" ? file.category_ar : file.category_en;
+        meta.append(category);
+        if (file.pdf_size) {
+          const size = document.createElement("span");
+          size.textContent = formatSize(file.pdf_size);
+          meta.append(size);
+        }
         copy.append(title, meta);
         info.append(mark, copy);
 
@@ -786,18 +823,11 @@
         actions.className = "file-actions";
         const view = document.createElement("a");
         view.className = "action primary";
-        view.href = url;
-        view.target = "_blank";
-        view.rel = "noopener";
-        view.setAttribute("aria-label", `${text.viewFile}: ${file.name}`);
+        view.href = "#";
+        view.setAttribute("aria-label", `${text.details}: ${fileTitle}`);
+        view.addEventListener("click", event => { event.preventDefault(); showDetails(file); });
         view.innerHTML = `<span class="action-icon" aria-hidden="true">↗</span><span>${text.viewFile}</span>`;
-        const download = document.createElement("a");
-        download.className = "action";
-        download.href = url;
-        download.download = file.name;
-        download.setAttribute("aria-label", `${text.download}: ${file.name}`);
-        download.innerHTML = `<span class="action-icon" aria-hidden="true">↓</span><span>${text.download}</span>`;
-        actions.append(view, download);
+        actions.append(view);
         row.append(info, actions);
         list.append(row);
       }
@@ -806,9 +836,160 @@
       resultCount.textContent = language === "ar"
         ? `${visibleFiles.length.toLocaleString(locale)} ملف`
         : `${visibleFiles.length.toLocaleString(locale)} ${visibleFiles.length === 1 ? "file" : "files"}`;
-      document.getElementById("footerUnit").textContent = language === "ar" ? "ملف" : (files.length === 1 ? "file" : "files");
-      document.getElementById("emptyCopy").textContent = activeFilter === "centers" ? text.noCenters : text.emptyCopy;
+      document.getElementById("footerUnit").textContent = language === "ar" ? "ملف" : (publishedFiles.length === 1 ? "file" : "files");
+      document.getElementById("emptyTitle").textContent = publishedFiles.length ? text.emptyTitle : text.emptyLibrary;
+      document.getElementById("emptyCopy").textContent = publishedFiles.length ? text.emptyCopy : text.emptyLibraryCopy;
       emptyState.hidden = visibleFiles.length !== 0;
+    }
+
+    function renderFilters() {
+      const container = document.querySelector(".filters");
+      const categories = [...new Map(files.filter(item => item.content_type === "file").map(item => [item.category, item])).values()];
+      container.replaceChildren();
+      const options = [{ key: "all", label: currentText().filterAll }, ...categories.map(item => ({
+        key: item.category,
+        label: language === "ar" ? item.category_ar : item.category_en
+      }))];
+      if (!options.some(option => option.key === activeFilter)) activeFilter = "all";
+      for (const option of options) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "filter";
+        button.dataset.filter = option.key;
+        button.setAttribute("aria-pressed", String(option.key === activeFilter));
+        button.textContent = option.label;
+        button.addEventListener("click", () => {
+          activeFilter = option.key;
+          renderFilters();
+          renderFiles();
+        });
+        container.append(button);
+      }
+    }
+
+    function renderCourses() {
+      const courses = files.filter(item => item.content_type === "course");
+      const section = document.getElementById("courseSection");
+      const container = document.getElementById("courseList");
+      section.hidden = courses.length === 0;
+      document.getElementById("courseCount").textContent = courses.length.toLocaleString(language === "ar" ? "ar-EG" : "en");
+      container.replaceChildren();
+      for (const course of courses) {
+        const card = document.createElement("article");
+        card.className = "course-card";
+        if (course.thumbnail_url) {
+          const cover = document.createElement("img");
+          cover.src = course.thumbnail_url;
+          cover.alt = "";
+          cover.loading = "lazy";
+          card.append(cover);
+        }
+        const copy = document.createElement("div");
+        copy.className = "course-copy";
+        const title = document.createElement("h3");
+        title.textContent = language === "ar" ? course.title_ar : course.title_en;
+        const description = document.createElement("p");
+        description.textContent = language === "ar" ? course.description_ar : course.description_en;
+        copy.append(title, description);
+        if (course.pdf_url) {
+          const details = document.createElement("a");
+          details.className = "action primary";
+          details.href = "#";
+          details.textContent = currentText().details;
+          details.addEventListener("click", event => { event.preventDefault(); showDetails(course); });
+          copy.append(details);
+        }
+        card.append(copy);
+        container.append(card);
+      }
+    }
+
+    function showDetails(item) {
+      const text = currentText();
+      const title = language === "ar" ? item.title_ar : item.title_en;
+      const description = language === "ar" ? item.description_ar : item.description_en;
+      const content = document.getElementById("detailContent");
+      content.replaceChildren();
+      const close = document.createElement("button");
+      close.className = "detail-close";
+      close.type = "button";
+      close.textContent = text.close;
+      close.addEventListener("click", () => document.getElementById("detailDialog").close());
+      content.append(close);
+      if (item.thumbnail_url) {
+        const cover = document.createElement("img");
+        cover.className = "detail-cover";
+        cover.src = item.thumbnail_url;
+        cover.alt = title;
+        content.append(cover);
+      }
+      const heading = document.createElement("h2");
+      heading.className = "detail-title";
+      heading.id = "detailTitle";
+      heading.textContent = title;
+      const copy = document.createElement("p");
+      copy.className = "detail-description";
+      copy.textContent = description || "";
+      const category = document.createElement("p");
+      category.className = "file-meta";
+      category.textContent = `${language === "ar" ? item.category_ar : item.category_en} · ${text.addedOn}: ${new Date(item.created_at).toLocaleDateString(language === "ar" ? "ar-EG" : "en")}`;
+      content.append(heading, copy, category);
+      if (item.pdf_url) {
+        const actions = document.createElement("div");
+        actions.className = "detail-actions";
+        const open = document.createElement("a");
+        open.className = "action primary";
+        open.href = item.pdf_url;
+        open.target = "_blank";
+        open.rel = "noopener";
+        open.textContent = text.viewFile;
+        actions.append(open);
+        if (item.allow_download) {
+          const download = document.createElement("a");
+          download.className = "action";
+          download.href = item.pdf_url;
+          download.download = "";
+          download.textContent = text.download;
+          actions.append(download);
+        }
+        content.append(actions);
+      }
+      document.getElementById("detailDialog").showModal();
+    }
+
+    async function loadFiles() {
+      const state = document.getElementById("loadState");
+      const text = currentText();
+      state.hidden = false;
+      state.textContent = text.loading;
+      emptyState.hidden = true;
+      const fail = message => {
+        state.replaceChildren(document.createTextNode(message));
+        const retry = document.createElement("button");
+        retry.className = "action";
+        retry.type = "button";
+        retry.textContent = text.retry;
+        retry.addEventListener("click", loadFiles);
+        state.append(document.createElement("br"), retry);
+      };
+      if (!supabase) {
+        fail(`${text.loadError} (${configurationError})`);
+        return;
+      }
+      try {
+        const { data, error } = await supabase.from("library_items").select("*").eq("is_published", true).order("created_at", { ascending: false });
+        if (error) throw error;
+        files = data || [];
+      } catch {
+        fail(text.loadError);
+        return;
+      }
+      state.hidden = true;
+      document.getElementById("totalCount").textContent = files.filter(item => item.content_type === "file").length.toLocaleString(language === "ar" ? "ar-EG" : "en");
+      document.getElementById("footerCount").textContent = document.getElementById("totalCount").textContent;
+      renderFilters();
+      renderFiles();
+      renderCourses();
     }
 
     function showToast(message) {
@@ -820,14 +1001,6 @@
     }
 
     searchInput.addEventListener("input", renderFiles);
-    for (const filter of filters) {
-      filter.addEventListener("click", () => {
-        activeFilter = filter.dataset.filter;
-        for (const button of filters) button.setAttribute("aria-pressed", String(button === filter));
-        renderFiles();
-      });
-    }
-
     document.getElementById("languageButton").addEventListener("click", () => {
       language = language === "ar" ? "en" : "ar";
       savePreference("library-language", language);
@@ -861,6 +1034,11 @@
 
     applyLanguage();
     applyTheme();
+    loadFiles();
+    supabase?.channel("library-items-live")
+      .on("postgres_changes", { event: "*", schema: "public", table: "library_items" }, loadFiles)
+      .subscribe();
+    window.setInterval(loadFiles, 60000);
   </script>
 </body>
 </html>
